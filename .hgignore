@@ -1,0 +1,13 @@
+syntax: glob
+*.iml
+*.ipr
+*.iws
+.idea
+target
+
+syntax: regexp
+.settings
+syntax: regexp
+.classpath
+syntax: regexp
+.project
