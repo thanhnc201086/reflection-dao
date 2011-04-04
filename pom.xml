@@ -8,9 +8,13 @@
     <name>Reflection DAO</name>
     <distributionManagement>
         <repository>
-            <id>artifactory</id>
-            <url>http://repo.lab.fxinnovation.local/artifactory/ext-snapshot-local/</url>
+            <id>artif-deploy-libs-ext-release</id>
+            <url>http://repo.lab.fxinnovation.local/artifactory/ext-release-local/</url>
         </repository>
+        <snapshotRepository>
+            <id>artif-deploy-libs-ext-snapshots</id>
+            <url>http://repo.lab.fxinnovation.local/artifactory/ext-snapshot-local/</url>
+        </snapshotRepository>
     </distributionManagement>
     <dependencies>
         <dependency>
