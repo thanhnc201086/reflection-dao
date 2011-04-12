@@ -8,6 +8,11 @@
     <name>Reflection DAO</name>
     <description>POJO/Reflection-based filesystem database.</description>
     <url>http://code.google.com/p/reflection-dao/</url>
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
     <licenses>
         <license>
             <name>Lesser GPL 3.0</name>
@@ -24,16 +29,6 @@
             <email>deus@pleasant-nightmare.com</email>
         </developer>
     </developers>
-    <distributionManagement>
-        <repository>
-            <id>sonatatype-staged-release</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-        </repository>
-        <snapshotRepository>
-            <id>sonatatype-snapshots</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
     <build>
         <plugins>
             <plugin>
