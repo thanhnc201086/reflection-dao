@@ -29,8 +29,6 @@ import java.util.List;
  * @author ivicaz
  */
 public final class ReflectionDAO {
-    private static ReflectionDAO INSTANCE;
-
     private static final String EL_ROOT = "reflection-dao";
     private static final String EL_FIELD = "field";
     private static final String EL_CLASS = "class";
@@ -46,15 +44,24 @@ public final class ReflectionDAO {
     private static final String ATTR_MAP_VALUETYPE = "value-type";
     private static final String ATTR_MAP_KEYTYPE = "key-type";
 
+    private static ReflectionDAO INSTANCE;
+
+    public static ReflectionDAO getInstance() {
+        if (INSTANCE == null)
+            INSTANCE = new ReflectionDAO();
+        return INSTANCE;
+    }
+
+    public static <T extends Identified> Table<T> instantiateViewOn(Class<T> dataClass) {
+        return new Table<T>(getInstance().dbaseRoot, dataClass);
+    }
+
+
     private File dbaseRoot;
 
     private ReflectionDAO() {
         setupRoot();
         setupPropertyEditors();
-    }
-
-    public static void createInstance() {
-        INSTANCE = new ReflectionDAO();
     }
 
     private void setupPropertyEditors() {
@@ -76,14 +83,10 @@ public final class ReflectionDAO {
     private void setupRoot() {
         // Setup root of serialized classes here
         String userHome = System.getProperty("user.home");
-        dbaseRoot = new File(userHome, ".tcg/persistence");
+        dbaseRoot = new File(userHome, ".reflectiondao/persistence");
 
         if (!dbaseRoot.exists())
             dbaseRoot.mkdirs();
-    }
-
-    public static <T extends Identified> Table<T> instantiateViewOn(Class<T> dataClass) {
-        return new Table<T>(INSTANCE.dbaseRoot, dataClass);
     }
 
     public void serialize(Object o, OutputStream outputStream) {
@@ -117,7 +120,7 @@ public final class ReflectionDAO {
         while (persistingClass != Object.class) {
             Field[] declaredFields = persistingClass.getDeclaredFields();
             for (Field field : declaredFields) {
-                if (!Modifier.isTransient(field.getModifiers())) {
+                if (isFieldValidForPersisting(field)) {
                     try {
                         boolean wasAccesible = field.isAccessible();
                         field.setAccessible(true);
@@ -221,7 +224,7 @@ public final class ReflectionDAO {
         while (persistingClass != Object.class) {
             Field[] fields = persistingClass.getDeclaredFields();
             for (Field field : fields) {
-                if (!Modifier.isTransient(field.getModifiers())) {
+                if (isFieldValidForPersisting(field)) {
                     boolean wasAccesible = field.isAccessible();
                     field.setAccessible(true);
 
@@ -243,6 +246,10 @@ public final class ReflectionDAO {
 
             persistingClass = persistingClass.getSuperclass();
         }
+    }
+
+    private boolean isFieldValidForPersisting(Field field) {
+        return !Modifier.isTransient(field.getModifiers()) && !Modifier.isStatic(field.getModifiers());
     }
 
     private Object loadObject(Element fieldEl, Class<?> type) throws ClassNotFoundException {
@@ -365,9 +372,5 @@ public final class ReflectionDAO {
         } catch (JDOMException e) {
             throw new IllegalStateException(e);
         }
-    }
-
-    public static ReflectionDAO getInstance() {
-        return INSTANCE;
     }
 }

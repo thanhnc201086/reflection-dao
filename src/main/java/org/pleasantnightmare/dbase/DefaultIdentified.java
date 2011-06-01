@@ -16,10 +16,10 @@ public class DefaultIdentified implements Identified {
 
     public void setId(int id) {
         this.id = id;
-        LOGGER.debug("Object '{}' identified: {}", this, this.id);
+        LOGGER.debug("Object '{}' identified and persisted: {}", this, this.id);
     }
 
-    public boolean isAlreadyIdentified() {
+    public boolean isPersisted() {
         return id != null;
     }
 }

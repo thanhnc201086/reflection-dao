@@ -1,0 +1,14 @@
+1.1     John Z. <deus@pleasant-nightmare.com>
+
+    * Removed obsolete createInstance function and made it real singleton
+    * Added storage test
+    * Storing all data under '.reflectiondao/persistence', rather than '.tcg/persistence'
+    * Not storing static fields any more
+    * Fixed a bug where instantiating a view causes NPE if getInstance() wasn't called before
+    * Renamed 'isAlreadyIdentified' to 'isPersisted'
+
+
+
+1.0     John Z. <deus@pleasant-nightmare.com>
+
+    * Initial version

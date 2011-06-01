@@ -118,7 +118,7 @@ public class Table<T extends Identified> {
     }
 
     public void delete(T data) {
-        if (data.isAlreadyIdentified()) {
+        if (data.isPersisted()) {
             deleteFileAs(data.getId());
         }
     }
@@ -152,7 +152,7 @@ public class Table<T extends Identified> {
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(row);
-            if (!data.isAlreadyIdentified())
+            if (!data.isPersisted())
                 data.setId(Integer.parseInt(row.getName()));
             ReflectionDAO.getInstance().serialize(data, fos);
         } catch (FileNotFoundException e) {
