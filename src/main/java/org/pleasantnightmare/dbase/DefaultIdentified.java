@@ -8,13 +8,13 @@ import org.slf4j.LoggerFactory;
  */
 public class DefaultIdentified implements Identified {
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultIdentified.class);
-    private Integer id;
+    private Long id;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
         LOGGER.debug("Object '{}' identified and persisted: {}", this, this.id);
     }

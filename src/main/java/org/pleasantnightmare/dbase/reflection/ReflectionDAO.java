@@ -65,12 +65,12 @@ public final class ReflectionDAO {
     }
 
     private void setupPropertyEditors() {
-        PropertyEditorManager.registerEditor(Boolean.class, BoolEditor.class);
+//        PropertyEditorManager.registerEditor(Boolean.class, BoolEditor.class);
         PropertyEditorManager.registerEditor(Byte.class, ByteEditor.class);
         PropertyEditorManager.registerEditor(Color.class, ColorPropertyEditor.class);
         PropertyEditorManager.registerEditor(Double.class, DoubleEditor.class);
         PropertyEditorManager.registerEditor(Float.class, FloatEditor.class);
-        PropertyEditorManager.registerEditor(Integer.class, IntEditor.class);
+//        PropertyEditorManager.registerEditor(Integer.class, IntEditor.class);
         PropertyEditorManager.registerEditor(Long.class, LongEditor.class);
         PropertyEditorManager.registerEditor(Short.class, ShortEditor.class);
         PropertyEditorManager.registerEditor(String.class, StringEditor.class);

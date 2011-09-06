@@ -14,9 +14,9 @@ package org.pleasantnightmare.dbase;
  * @author ivicaz
  */
 public interface Identified {
-    int getId();
+    long getId();
 
-    void setId(int id);
+    void setId(long id);
 
     boolean isPersisted();
 }

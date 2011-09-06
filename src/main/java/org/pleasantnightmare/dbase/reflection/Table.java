@@ -63,17 +63,17 @@ public class Table<T extends Identified> {
      *
      * @return new unused number
      */
-    private int getNextIndex() throws IOException {
+    private long getNextIndex() throws IOException {
         File maxNumberFile = new File(relativeTableDirectory, ".maxNumber");
         RandomAccessFile maxNumberRAFile;
         maxNumberRAFile = new RandomAccessFile(maxNumberFile, "rw");
         FileChannel maxNumberChannel = maxNumberRAFile.getChannel();
         FileLock lock = maxNumberChannel.lock();
-        ByteBuffer numberBuffer = ByteBuffer.allocate(4);
+        ByteBuffer numberBuffer = ByteBuffer.allocate(Long.SIZE);
         maxNumberChannel.read(numberBuffer);
-        int maxNumber = numberBuffer.getInt(0);
-        int nextIndex = maxNumber + 1;
-        numberBuffer.putInt(0, nextIndex);
+        long maxNumber = numberBuffer.getLong(0);
+        long nextIndex = maxNumber + 1;
+        numberBuffer.putLong(0, nextIndex);
         numberBuffer.position(0);
         int bytesWritten = maxNumberChannel.write(numberBuffer, 0);
         lock.release();
@@ -81,17 +81,17 @@ public class Table<T extends Identified> {
         return nextIndex;
     }
 
-    public T selectById(int id) {
+    public T selectById(long id) {
         File file = getRow(id);
         return deserializeObject(file);
     }
 
-    public boolean contains(int id) {
+    public boolean contains(long id) {
         File file = getRow(id);
         return file != null;
     }
 
-    public void update(int id, T data) {
+    public void update(long id, T data) {
         if (!contains(id))
             throw new IllegalStateException("No row with ID: " + id);
 
@@ -106,15 +106,13 @@ public class Table<T extends Identified> {
         // autoincrements: it doesn't care if there are any 'free'
         // ID's in the middle, it just returns one ID higher than
         // highest ID stored.
-        int nextId = 0;
         try {
-            nextId = getNextIndex();
+            long nextId = getNextIndex();
+            data.setId(nextId);
+            saveFileAs(nextId, data);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        data.setId(nextId);
-        saveFileAs(nextId, data);
     }
 
     public void delete(T data) {
@@ -123,14 +121,14 @@ public class Table<T extends Identified> {
         }
     }
 
-    private void deleteFileAs(int id) {
+    private void deleteFileAs(long id) {
         File row = getRow(id);
         if (row != null) {
             row.delete();
         }
     }
 
-    private void saveFileAs(int id, T data) {
+    private void saveFileAs(long id, T data) {
         if (contains(id))
             throw new IllegalStateException("Row already exists, ID: " + id);
 
@@ -138,8 +136,8 @@ public class Table<T extends Identified> {
         serializeObject(data, row);
     }
 
-    private File getRow(final int id) {
-        File potentialRowFile = new File(relativeTableDirectory, Integer.toString(id));
+    private File getRow(final long id) {
+        File potentialRowFile = new File(relativeTableDirectory, Long.toString(id));
 
         if (potentialRowFile.exists()) {
             return potentialRowFile;
@@ -153,7 +151,7 @@ public class Table<T extends Identified> {
         try {
             fos = new FileOutputStream(row);
             if (!data.isPersisted())
-                data.setId(Integer.parseInt(row.getName()));
+                data.setId(Long.parseLong(row.getName()));
             ReflectionDAO.getInstance().serialize(data, fos);
         } catch (FileNotFoundException e) {
             throw new IllegalStateException(e);
