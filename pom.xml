@@ -4,7 +4,7 @@
     <groupId>org.pleasantnightmare</groupId>
     <artifactId>reflection-dao</artifactId>
     <packaging>jar</packaging>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.2</version>
     <name>Reflection DAO</name>
     <description>POJO/Reflection-based filesystem database.</description>
     <url>http://code.google.com/p/reflection-dao/</url>
